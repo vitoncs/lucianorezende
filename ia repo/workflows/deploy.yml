@@ -1,0 +1,50 @@
+name: Deploy Full Stack
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Configura backend Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: pip install -r requirements.txt
+
+      # Inicia o servidor FastAPI em background
+      - name: Run FastAPI
+        working-directory: ./backend
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          nohup uvicorn app:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
+          echo "FastAPI running on port 8000"
+
+      # Configura servidor web para o frontend
+      - name: Set up Node.js (para http-server)
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install http-server
+        run: npm install -g http-server
+
+      # Inicia o frontend na porta 3000
+      - name: Run Frontend
+        working-directory: ./frontend
+        run: |
+          nohup http-server -p 3000 > frontend.log 2>&1 &
+          echo "Frontend running on port 3000"
+
+      # Mantém o job rodando (opcional para teste)
+      - name: Keep alive
+        run: |
+          while true; do sleep 60; done
