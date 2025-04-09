@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # Configuration
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "sk-7594c5dc85154bac874d8eeabadee9a5")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY",)
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
 
 SYSTEM_PROMPT = """Prompt Especialista:  IA para Análise Jurídica de Pleitos Migratórios
