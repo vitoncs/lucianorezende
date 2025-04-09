@@ -1,5 +1,0 @@
-.env
-*.env
-*.secret
-main.py
-
